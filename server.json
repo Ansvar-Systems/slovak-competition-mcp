@@ -1,0 +1,11 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "eu.ansvar/slovak-competition-mcp",
+  "description": "Query PMU (Slovak Antimonopoly Office) decisions, merger control cases, and sector enforcement activity",
+  "repository": { "url": "https://github.com/Ansvar-Systems/slovak-competition-mcp", "source": "github" },
+  "homepage": "https://ansvar.eu",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "keywords": ["pmu-sk", "slovak-competition", "cartel", "merger-control", "antitrust", "slovakia", "competition-law", "compliance", "mcp", "ansvar"],
+  "packages": [{ "registryType": "npm", "identifier": "@ansvar/slovak-competition-mcp", "version": "0.1.0", "transport": { "type": "stdio" } }]
+}
