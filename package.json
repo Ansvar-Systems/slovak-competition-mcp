@@ -5,13 +5,37 @@
   "description": "PMU (Slovak Antimonopoly Office) MCP server — competition law decisions, merger control, and sector enforcement for Slovakia",
   "type": "module",
   "main": "dist/src/index.js",
-  "bin": { "slovak-competition-mcp": "dist/src/index.js" },
-  "files": ["dist", "server.json"],
-  "engines": { "node": ">=20" },
-  "repository": { "type": "git", "url": "git+https://github.com/Ansvar-Systems/slovak-competition-mcp.git" },
-  "bugs": { "url": "https://github.com/Ansvar-Systems/slovak-competition-mcp/issues" },
+  "bin": {
+    "slovak-competition-mcp": "dist/src/index.js"
+  },
+  "files": [
+    "dist",
+    "server.json"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ansvar-Systems/slovak-competition-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ansvar-Systems/slovak-competition-mcp/issues"
+  },
   "homepage": "https://github.com/Ansvar-Systems/slovak-competition-mcp#readme",
-  "keywords": ["mcp", "model-context-protocol", "ai", "claude", "pmu-sk", "slovak-competition", "antitrust", "merger-control", "slovakia", "compliance", "ansvar"],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "pmu-sk",
+    "slovak-competition",
+    "antitrust",
+    "merger-control",
+    "slovakia",
+    "compliance",
+    "ansvar"
+  ],
   "author": "Ansvar Systems AB <hello@ansvar.ai>",
   "license": "Apache-2.0",
   "scripts": {
@@ -31,6 +55,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.26.0",
     "better-sqlite3": "^9.4.3",
+    "cheerio": "^1.2.0",
     "zod": "^3.22.4"
   }
 }
