@@ -18,6 +18,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { searchDecisions, getDecision, searchMergers, getMerger, listSectors } from "./db.js";
+import { buildCitation } from "./utils/citation.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -116,9 +117,31 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
     switch (name) {
       case "sk_comp_search_decisions": { const p = SearchDecisionsArgs.parse(args); const r = searchDecisions({ query: p.query, type: p.type, sector: p.sector, outcome: p.outcome, limit: p.limit }); return textContent({ results: r, count: r.length }); }
-      case "sk_comp_get_decision": { const p = GetDecisionArgs.parse(args); const d = getDecision(p.case_number); return d ? textContent(d) : errorContent(`Decision not found: ${p.case_number}`); }
+      case "sk_comp_get_decision": {
+        const p = GetDecisionArgs.parse(args);
+        const d = getDecision(p.case_number);
+        if (!d) return errorContent(`Decision not found: ${p.case_number}`);
+        const _citation = buildCitation(
+          p.case_number,
+          (d as Record<string, unknown>).title as string || p.case_number,
+          "sk_comp_get_decision",
+          { case_number: p.case_number },
+        );
+        return textContent({ ...d as Record<string, unknown>, _citation });
+      }
       case "sk_comp_search_mergers": { const p = SearchMergersArgs.parse(args); const r = searchMergers({ query: p.query, sector: p.sector, outcome: p.outcome, limit: p.limit }); return textContent({ results: r, count: r.length }); }
-      case "sk_comp_get_merger": { const p = GetMergerArgs.parse(args); const m = getMerger(p.case_number); return m ? textContent(m) : errorContent(`Merger case not found: ${p.case_number}`); }
+      case "sk_comp_get_merger": {
+        const p = GetMergerArgs.parse(args);
+        const m = getMerger(p.case_number);
+        if (!m) return errorContent(`Merger case not found: ${p.case_number}`);
+        const _citation = buildCitation(
+          p.case_number,
+          (m as Record<string, unknown>).title as string || p.case_number,
+          "sk_comp_get_merger",
+          { case_number: p.case_number },
+        );
+        return textContent({ ...m as Record<string, unknown>, _citation });
+      }
       case "sk_comp_list_sectors": { const s = listSectors(); return textContent({ sectors: s, count: s.length }); }
       case "sk_comp_about": return textContent({ name: SERVER_NAME, version: pkgVersion, description: "PMU (Protimonopolný úrad Slovenskej republiky — Slovak Antimonopoly Office) MCP server. Provides access to Slovak competition law enforcement decisions, merger control cases, and sector enforcement data under the ZOHS (Zákon o ochrane hospodárskej súťaže).", data_source: "PMU Slovakia (https://www.antimon.gov.sk/)", coverage: { decisions: "Abuse of dominance, cartel enforcement, and sector inquiries under ZOHS", mergers: "Merger control decisions (concentrations) — Phase I and Phase II", sectors: "Telecommunications, energy, retail, financial services, digital economy, food and agriculture" }, tools: TOOLS.map(t => ({ name: t.name, description: t.description })) });
       default: return errorContent(`Unknown tool: ${name}`);
