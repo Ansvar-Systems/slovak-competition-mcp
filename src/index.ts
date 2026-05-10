@@ -123,11 +123,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!d) return errorContent(`Decision not found: ${p.case_number}`);
         const _citation = buildCitation(
           p.case_number,
-          (d as Record<string, unknown>).title as string || p.case_number,
+          (d as unknown as Record<string, unknown>).title as string || p.case_number,
           "sk_comp_get_decision",
           { case_number: p.case_number },
         );
-        return textContent({ ...d as Record<string, unknown>, _citation });
+        return textContent({ ...d as unknown as Record<string, unknown>, _citation });
       }
       case "sk_comp_search_mergers": { const p = SearchMergersArgs.parse(args); const r = searchMergers({ query: p.query, sector: p.sector, outcome: p.outcome, limit: p.limit }); return textContent({ results: r, count: r.length }); }
       case "sk_comp_get_merger": {
@@ -136,11 +136,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!m) return errorContent(`Merger case not found: ${p.case_number}`);
         const _citation = buildCitation(
           p.case_number,
-          (m as Record<string, unknown>).title as string || p.case_number,
+          (m as unknown as Record<string, unknown>).title as string || p.case_number,
           "sk_comp_get_merger",
           { case_number: p.case_number },
         );
-        return textContent({ ...m as Record<string, unknown>, _citation });
+        return textContent({ ...m as unknown as Record<string, unknown>, _citation });
       }
       case "sk_comp_list_sectors": { const s = listSectors(); return textContent({ sectors: s, count: s.length }); }
       case "sk_comp_about": return textContent({ name: SERVER_NAME, version: pkgVersion, description: "PMU (Protimonopolný úrad Slovenskej republiky — Slovak Antimonopoly Office) MCP server. Provides access to Slovak competition law enforcement decisions, merger control cases, and sector enforcement data under the ZOHS (Zákon o ochrane hospodárskej súťaže).", data_source: "PMU Slovakia (https://www.antimon.gov.sk/)", coverage: { decisions: "Abuse of dominance, cartel enforcement, and sector inquiries under ZOHS", mergers: "Merger control decisions (concentrations) — Phase I and Phase II", sectors: "Telecommunications, energy, retail, financial services, digital economy, food and agriculture" }, tools: TOOLS.map(t => ({ name: t.name, description: t.description })) });
